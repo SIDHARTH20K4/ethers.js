@@ -1,40 +1,27 @@
-import '@rainbow-me/rainbowkit/styles.css';
-import './App.css'; // Your custom CSS
+import DepositForm from './components/depositForm';
 import { WagmiProvider } from 'wagmi';
 import { config } from './config';
-import { ConnectButton, darkTheme } from '@rainbow-me/rainbowkit';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
-import DepositForm from './components/depositForm';
+import { RainbowKitProvider, ConnectButton, darkTheme } from '@rainbow-me/rainbowkit';
+
 const queryClient = new QueryClient();
 
-const App = () => {
+function App() {
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider 
-        modalSize="compact"
-          theme={darkTheme({
-            accentColor: '#3b82f6',
-            borderRadius: 'medium',
-            fontStack: 'system',
-          })}
-          coolMode
+        <RainbowKitProvider
+          modalSize="compact"
+          theme={darkTheme()}
         >
-          <div className="wallet-container">
-            <ConnectButton 
-              chainStatus="icon"
-              showBalance={false}
-              label="Connect Wallet"
-              accountStatus="address"
-              className="connect-button-overrides"
-            />
-          </div> 
-          <DepositForm/>
+          <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white">
+            <ConnectButton />
+            <DepositForm />
+          </div>
         </RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
   );
-};
+}
 
 export default App;

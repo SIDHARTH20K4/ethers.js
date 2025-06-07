@@ -1,30 +1,30 @@
-import { useState, useEffect } from 'react';
-import {
-  initContract,
-  getConnectedAddress,
-  depositETH,
-} from '../services/ethersService';
+// src/components/DepositForm.jsx
+import React, { useState } from 'react';
+import { useContract } from '../hooks/useContract';
+import { ethers } from 'ethers';
 
 const DepositForm = () => {
   const [amount, setAmount] = useState('');
   const [loading, setLoading] = useState(false);
-  const [userAddress, setUserAddress] = useState('');
+  const contract = useContract();
 
-  useEffect(() => {
-    (async () => {
-      await initContract();
-      const address = await getConnectedAddress();
-      setUserAddress(address);
-    })();
-  }, []);
-
-  const handleDeposit = async () => {
+  const handleDeposit = async (e) => {
+    e.preventDefault();
     try {
+      if (!contract) {
+        alert('Contract not initialized');
+        return;
+      }
       setLoading(true);
-      await depositETH(amount);
+      const tx = await contract.DepositETH({
+        value: ethers.parseEther(amount),
+      });
+      await tx.wait();
       alert('Deposit successful!');
+      setAmount('');
     } catch (err) {
-      alert(`Error: ${err.message}`);
+      console.error(err);
+      alert('Deposit failed.');
     } finally {
       setLoading(false);
     }
@@ -32,16 +32,19 @@ const DepositForm = () => {
 
   return (
     <div>
-      <h3>Welcome, {userAddress.slice(0, 6)}...{userAddress.slice(-4)}</h3>
-      <input
-        type="number"
-        value={amount}
-        onChange={(e) => setAmount(e.target.value)}
-        placeholder="Amount in ETH"
-      />
-      <button onClick={handleDeposit} disabled={loading}>
-        {loading ? 'Depositing...' : 'Deposit ETH'}
-      </button>
+      <h2>Deposit AVAX</h2>
+      <form onSubmit={handleDeposit}>
+        <input
+          type="number"
+          value={amount}
+          placeholder="Amount in AVAX"
+          onChange={(e) => setAmount(e.target.value)}
+          required
+        />
+        <button type="submit" disabled={loading}>
+          {loading ? 'Depositing...' : 'Deposit'}
+        </button>
+      </form>
     </div>
   );
 };

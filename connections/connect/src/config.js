@@ -11,6 +11,6 @@ import {
 
 export const config = getDefaultConfig({
     appName: 'My WalletConnect App',
-    walletConnectProjectId: 'c772b9aa9079034ee60dd841be164a13', // Get from https://cloud.walletconnect.com/
+    projectId: 'ebff9f33307904b828cc6562f048dd3a', // Get from https://cloud.walletconnect.com/
     chains: [avalancheFuji], // Add more chains like `polygon`, `optimism`
 });
